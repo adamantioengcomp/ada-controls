@@ -1,0 +1,14 @@
+{
+    "name": "ada-controls",
+    "version": "1.0.0",
+    "main": "ada-controls.min.js",
+    "ignore":[
+      
+    ],
+    "dependencies": {
+       "jquery":  "*",
+	   "angular": "*"
+    },
+    "devDependencies": {     
+    }
+}
