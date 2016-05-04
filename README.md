@@ -90,3 +90,31 @@ Set the active control on the last element on the page
 
 Set the active control on next element on the page.
 if "useFieldCheckFunction" was used to register a check function, the function will be used to check for the next control to go (check the configuration session).
+
+##  Configuration
+
+You can configure a custom function to determine the next focus
+
+1. On the configuration session, inject the adaControlProvider
+
+<pre>
+myApp.configure(function(adaControlProvider){
+
+...
+
+})
+</pre>
+
+2. Setup the custom function with the method "useFieldCheckFunction"
+
+<pre>
+adaControlProvider.useFieldCheckFunction(function(field){
+
+  if (field.id === 'input1') // For example, if is currently on the 'input1' field, 
+    return $('input5')       // the next field will be the 'input5'
+    
+  return false;  // Otherwise, follow the default order (the order the elements are displayed in the page)
+});
+</pre>
+
+2. S
