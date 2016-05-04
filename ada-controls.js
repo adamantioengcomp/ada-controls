@@ -24,7 +24,7 @@ angular.module('ada-controls',[])
     /**
      * Register a function callback to verify a field before setting focus
      *@param {function} callback the callback to register. Receives a control component and
-     *                           must return the jquery object witch is the next control, or return 
+     *                           must return the object witch is the next control, or return 
      *                           false to return to the next control in html
      */
     this.useFieldCheckFunction = function(callback){
@@ -47,7 +47,7 @@ angular.module('ada-controls',[])
 
             /**
              * Set the active focus on a control element on the page
-             * @return {String|Object} field the jquery object or the selector of the field
+             * @return {String|Object} field the object or the selector of the field
              */
             setActiveFocus : function(field){
                 if (typeof field === "string")
@@ -61,7 +61,7 @@ angular.module('ada-controls',[])
 
             /**
              * Tells if a field is the first control of the page
-             * @param {String|object} field the jquery object or the selector of the field
+             * @param {String|object} field the object or the selector of the field
              * @return {boolean}
              */
             isFirstControl : function(field){
@@ -71,13 +71,12 @@ angular.module('ada-controls',[])
                 if (typeof field === "string")
                     field = $(field);
 
-                var inputs = $("[control]");
-                return inputs && (inputs[0] === field);
+                return (this.getFirstControl() === field);
             },
 
             /**
              * Tells if a field is the last control of the page
-             * @param {String|object} field the jquery object or the selector of the field
+             * @param {String|object} field the object or the selector of the field
              * @return {boolean}
              */
             isLastControl : function(field){
@@ -87,19 +86,20 @@ angular.module('ada-controls',[])
                 if (typeof field === "string")
                     field = $(field);
 
-                var inputs = $("[control]");
-                return inputs && (inputs[inputs.length - 1] === field);
+                return (this.getLastControl() === field);
             },
 
             /**
-             * @return {object} the last control element on the page (jquery element)
+             * @param  {undefined|object} options opitional object containing the options to be considered.
+             *                                      
+             * @return {object} the last control element on the page
              */
-            getLastControl : function(options){            
+            getLastControl : function(validateField){            
                 var inputs = $("[control]");
 
                 if (!inputs) return undefined;
 
-                if (options && (options.validateField == false))
+                if (validateField == false)
                     return inputs[inputs.length - 1];
 
                 // Verify if the control is valid
@@ -108,26 +108,24 @@ angular.module('ada-controls',[])
                 }else{
                     // If the control is not valid, search for the next
 
-                    var opt = {};// Clones the options, for a new call, so it don't miss the original reference
-                    for (var i in options){
-                        opt[i] = options[i];
-                    }
+                    var opt = {};// Create the options, for a new call, so it don't miss the original reference                    
                     opt.baseField = inputs[inputs.length - 1]; // Search for the next field, starting from the last
                     opt.stopOnLast = true;     // Stop on last (first in this case), for prevent infinite loop (where there is no valid control on the page)
-                    opt.reverse = true;  // The search is bottow - up
+                    opt.reverse = true;        // The search is bottow - up
+                    opt.validateField = validateField;
                     return this.getNextControl(opt);
                 }
             },
 
             /**
-             * @return {object} the first control element on the page (jquery element)
+             * @return {object} the first control element on the page
              */
-            getFirstControl : function(options){
+            getFirstControl : function(validateField){
                 var inputs = $("[control]");
 
                 if (!inputs) return undefined;
 
-                if (options && (options.validateField == false))
+                if (validateField == false)
                     return inputs[0];
 
                 // Verify if the control is valid
@@ -136,12 +134,11 @@ angular.module('ada-controls',[])
                 }else{
                     // If the control is not valid, search for the next
 
-                    var opt = {};// Clones the options, for a new call, so it don't miss the original reference
-                    for (var i in options){
-                        opt[i] = options[i];
-                    }
+                    var opt = {};// Creates the options, for a new call, so it don't miss the original reference
                     opt.baseField = inputs[0]; // Search for the next field, starting from the first
                     opt.stopOnLast = true;     // Stop on last, for prevent infinite loop (where there is no valid control on the page)
+                    opt.reverse = false;       // The search is top - down
+                    opt.validateField = validateField;
                     return this.getNextControl(opt);
                 }
             },
@@ -149,16 +146,16 @@ angular.module('ada-controls',[])
             /**
              * Set the active control on the fitst element on the page
              */
-            firstControl : function(){
-                var ctrl = this.getFirstControl();
+            firstControl : function(validateField){
+                var ctrl = this.getFirstControl(validateField);
                 if (ctrl) ctrl.focus();
             },
 
             /**
              * Set the active control on the last element on the page
              */
-            lastControl : function(){
-                var ctrl = this.getLastControl();
+            lastControl : function(validateField){
+                var ctrl = this.getLastControl(validateField);
                 if (ctrl) ctrl.focus();
             },
 
@@ -166,6 +163,7 @@ angular.module('ada-controls',[])
              * find the next element on the page
              * if "useFieldCheckFunction" was used to register a check function, the
              * function will be used to check for the next control to go.
+             * @return {object} the last control element on the page
              */
             getNextControl : function(options){
                 var baseField = (options && options.baseField) ? options.baseField : activeFocus.field;
@@ -178,8 +176,8 @@ angular.module('ada-controls',[])
                 }
 
                 var inputs = $("[control]");
-                if (!baseField || (baseField && !baseField.hasAttribute('control'))){
-                    return this.getFirstControl(options);
+                if (!baseField || (baseField && !baseField.hasAttribute('control'))){                    
+                    return (options && options.reverse) ? this.getLastControl(options.validateField) : this.getFirstControl(options.validateField);
                 }else{
                     var selectNext = false;
                     for (var i in inputs){              
