@@ -33,18 +33,22 @@ angular.module('ada-controls',[])
 
     this.$get = ['activeFocus',function(activeFocus){        
 
+        var isValidField = function(field){
+            return (!field.hasAttribute('disabled') && $(field).is(':visible'));
+        };
+
         return {
-        	/**
-        	 * @return {Object} the active focus element 
-        	 */
+            /**
+             * @return {Object} the active focus element 
+             */
             getActiveFocus : function(){
                 return activeFocus.field;
             },
 
             /**
              * Set the active focus on a control element on the page
-        	 * @return {String|Object} field the jquery object or the selector of the field
-        	 */
+             * @return {String|Object} field the jquery object or the selector of the field
+             */
             setActiveFocus : function(field){
                 if (typeof field === "string")
                     field = $(field);
@@ -58,8 +62,8 @@ angular.module('ada-controls',[])
             /**
              * Tells if a field is the first control of the page
              * @param {String|object} field the jquery object or the selector of the field
-        	 * @return {boolean}
-        	 */
+             * @return {boolean}
+             */
             isFirstControl : function(field){
                 if (!field)
                     field = activeFocus.field;
@@ -74,8 +78,8 @@ angular.module('ada-controls',[])
             /**
              * Tells if a field is the last control of the page
              * @param {String|object} field the jquery object or the selector of the field
-        	 * @return {boolean}
-        	 */
+             * @return {boolean}
+             */
             isLastControl : function(field){
                 if (!field)
                     field = activeFocus.field;
@@ -90,30 +94,63 @@ angular.module('ada-controls',[])
             /**
              * @return {object} the last control element on the page (jquery element)
              */
-            getLastControl : function(){
+            getLastControl : function(options){            
                 var inputs = $("[control]");
 
                 if (!inputs) return undefined;
 
-                return inputs[inputs.length - 1];
+                if (options && (options.validateField == false))
+                    return inputs[inputs.length - 1];
+
+                // Verify if the control is valid
+                if (isValidField(inputs[inputs.length - 1])){ 
+                    return inputs[inputs.length - 1];
+                }else{
+                    // If the control is not valid, search for the next
+
+                    var opt = {};// Clones the options, for a new call, so it don't miss the original reference
+                    for (var i in options){
+                        opt[i] = options[i];
+                    }
+                    opt.baseField = inputs[inputs.length - 1]; // Search for the next field, starting from the last
+                    opt.stopOnLast = true;     // Stop on last (first in this case), for prevent infinite loop (where there is no valid control on the page)
+                    opt.reverse = true;  // The search is bottow - up
+                    return this.getNextControl(opt);
+                }
             },
 
             /**
              * @return {object} the first control element on the page (jquery element)
              */
-            getFirstControl : function(){
+            getFirstControl : function(options){
                 var inputs = $("[control]");
 
                 if (!inputs) return undefined;
 
-                return inputs[0];
+                if (options && (options.validateField == false))
+                    return inputs[0];
+
+                // Verify if the control is valid
+                if (isValidField(inputs[0])){ 
+                    return inputs[0];
+                }else{
+                    // If the control is not valid, search for the next
+
+                    var opt = {};// Clones the options, for a new call, so it don't miss the original reference
+                    for (var i in options){
+                        opt[i] = options[i];
+                    }
+                    opt.baseField = inputs[0]; // Search for the next field, starting from the first
+                    opt.stopOnLast = true;     // Stop on last, for prevent infinite loop (where there is no valid control on the page)
+                    return this.getNextControl(opt);
+                }
             },
 
             /**
              * Set the active control on the fitst element on the page
              */
             firstControl : function(){
-                var ctrl = getFirstControl();
+                var ctrl = this.getFirstControl();
                 if (ctrl) ctrl.focus();
             },
 
@@ -121,8 +158,48 @@ angular.module('ada-controls',[])
              * Set the active control on the last element on the page
              */
             lastControl : function(){
-                var ctrl = getLastControl();
+                var ctrl = this.getLastControl();
                 if (ctrl) ctrl.focus();
+            },
+
+            /**
+             * find the next element on the page
+             * if "useFieldCheckFunction" was used to register a check function, the
+             * function will be used to check for the next control to go.
+             */
+            getNextControl : function(options){
+                var baseField = (options && options.baseField) ? options.baseField : activeFocus.field;
+
+                if (this.isLastControl((options && options.baseField) ? options.baseField : undefined)){
+                    if (options && options.stopOnLast)
+                        return null;
+                    else
+                        baseField = undefined;
+                }
+
+                var inputs = $("[control]");
+                if (!baseField || (baseField && !baseField.hasAttribute('control'))){
+                    return this.getFirstControl(options);
+                }else{
+                    var selectNext = false;
+                    for (var i in inputs){              
+                        if ((inputs[i] && inputs[i] === baseField) || selectNext){
+                            
+                            var nextField = (options && options.reverse) ? inputs[Number(i)-1] : inputs[Number(i)+1];
+
+                            if (nextField){
+                                var field = checkNextField(baseField) || nextField;
+                                
+                                if ((options && (options.validateField === false)) || isValidField(field)){
+                                    return field;
+                                    break;
+                                }else{
+                                    selectNext = true;
+                                }
+                            }
+                        }
+                    }                    
+                }
             },
 
             /**
@@ -130,27 +207,9 @@ angular.module('ada-controls',[])
              * if "useFieldCheckFunction" was used to register a check function, the
              * function will be used to check for the next control to go.
              */
-            nextControl : function(){
-                var inputs = $("[control]");
-                if (!activeFocus.field || (activeFocus.field && !activeFocus.field.hasAttribute('control'))){
-                    inputs[0].focus();
-                }else{
-                    var selectNext = false;
-                    for (var i in inputs){              
-                        if ((inputs[i] && inputs[i] === activeFocus.field) || selectNext){
-                            if (inputs[Number(i)+1]){
-                                var field = checkNextField(activeFocus.field) || inputs[Number(i)+1];
-                                
-                                if (!field.hasAttribute('disabled')){
-                                    field.focus();
-                                    break;
-                                }else{
-                                    selectNext = true;
-                                }
-                            }
-                        }
-                    }
-                }
+            nextControl : function(options){
+                var field = this.getNextControl(options);
+                if (field) field.focus();
             }
         }
     }];
