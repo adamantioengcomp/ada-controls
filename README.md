@@ -117,4 +117,3 @@ adaControlProvider.useFieldCheckFunction(function(field){
 });
 </pre>
 
-2. S
