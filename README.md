@@ -3,32 +3,27 @@ Module for programatically controlling the form component controls.
 
 ## install
 
-1. use bower to install
-
+1 - use bower to install
 <pre>
 bower install ada-controls
 </pre>
-
-2. Include in index.html
-
+2 - Include in index.html
 ```html
 <script src="bower_components/ada-controls/ada-controls.min.js"></script>
 ```
-
-3. Include the module
-
+3 - Include the module
 <pre>
 angular.module('myApp',[ada-controls]);
 </pre>
 
 ## usage
 
-1. Use the 'control' directive to marck the controllable fields</li>
+1 - Use the 'control' directive to marck the controllable fields</li>
 
   ```html
     <input id="input1"  type="text" ng-model="myModel"  control>
   ```
-2. In the controller, inject the adControl service
+2 - In the controller, inject the adControl service
 
 <pre>
 myApp.controller('myController', function(adaControl){
@@ -38,7 +33,24 @@ myApp.controller('myController', function(adaControl){
 })
 </pre>
 
-3. Use the functions of the service
+3 - Use the functions of the service
+
+Examples:
+<pre>
+adaControl.firstControl(); //Goes to the first Control
+adaControl.nextControl(); //Goes to the next Control
+if (adaControl.isLastControl()){
+   var element = adaControls.getActiveFocus(); // Get the current control (focused element)
+   console.log('This is the last element. id = ' + element.id);
+}else{
+   var element = adaControls.getLastControl(); // Get the last control (focused element)
+   console.log('not the last yet. last id = ' + element.id)
+}
+adaControl.nextControl({reverse:true, stopOnLast: true, validateField: false}); //Goes to the previous Control (reverse)
+
+
+</pre>
+
 
 ## functions
 
