@@ -47,7 +47,7 @@ angular.module('ada-controls',[])
 
             /**
              * Set the active focus on a control element on the page
-             * @return {String|Object} field the object or the selector of the field
+             * @param {String|Object} field the object or the selector of the field
              */
             setActiveFocus : function(field){
                 if (typeof field === "string")
