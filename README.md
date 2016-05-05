@@ -180,7 +180,7 @@ Set the active control on next element on the page. If "useFieldCheckFunction" w
 
 You can configure a custom function to determine the next focus
 
-1. On the configuration session, inject the adaControlProvider
+1 - On the configuration session, inject the adaControlProvider
 
 <pre>
 myApp.configure(function(adaControlProvider){
@@ -190,7 +190,7 @@ myApp.configure(function(adaControlProvider){
 })
 </pre>
 
-2. Setup the custom function with the method "useFieldCheckFunction"
+2 - Setup the custom function with the method "useFieldCheckFunction"
 
 <pre>
 adaControlProvider.useFieldCheckFunction(function(field){
