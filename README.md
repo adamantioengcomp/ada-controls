@@ -68,28 +68,88 @@ Tells if a field is the last control of the page
 <b>return</b>
 {boolean}
 
-### getLastControl()
+### getLastControl(validateField)
+
+Find the last control element on the page
+<b>params</b>
+{undefined|boolean} validateField - tells if the field must be valid (true) or not (false). a valid field is enabled and visible on the screen. If ommited, true is considerated
+
+<b>return</b>
+{object} the last control element on the page
+
+
+### getFirstControl(validateField)
+
+Find the first control element on the page
+<b>params</b>
+{undefined|boolean} validateField - tells if the field must be valid (true) or not (false). a valid field is enabled and visible on the screen. If ommited, true is considerated
+
+<b>return</b>
+{object} the last control element on the page
+
+
+### getNextControl()
+
+find the next element on the page. If "useFieldCheckFunction" was used to register a check function, the function will be used to check for the next control to go.
+
+<b>params</b>
+
+{undefined|object} options - optional parameter that setups the options for the search.
+<ul>
+<li>
+<b>baseField</b>: {undefined|string|object} a field to start the search from (ignores the active control). Can be the control object or a selector string
+</li>
+<li>
+<b>stopOnLast</b>: {undefined|boolean} if set to true, when the function called from the last page, nothing will happens
+</li>
+<li>
+<b>reverse</b>: {undefined|boolean} if set to true, the navigation will become 
+</li>
+<li>
+<b>validateField</b>: {undefined|boolean} tells if the field must be valid (true) or not (false). a valid field is enabled and visible on the screen. if ommited, true is considerated
+</li>
+</ul>
 
 <b>return</b> 
-{object} the last control element on the page (jquery element)
+{object} the last control element on the page
 
-### getFirstControl()
 
-<b>return</b> 
-{object} the first control element on the page (jquery element)
-
-### firstControl()
+### firstControl(validateField)
 
 Set the active control on the fitst element on the page
+<b>params</b>  
+{undefined|boolean} validateField - tells if the field must be valid (true) or not (false). a valid field is enabled and visible on the screen. If ommited, true is considerated
 
-### lastControl()
+
+### lastControl(validateField)
 
 Set the active control on the last element on the page
+<b>params</b>  
+{undefined|boolean} validateField - tells if the field must be valid (true) or not (false). a valid field is enabled and visible on the screen. If ommited, true is considerated
 
-### nextControl()
 
-Set the active control on next element on the page.
-if "useFieldCheckFunction" was used to register a check function, the function will be used to check for the next control to go (check the configuration session).
+### nextControl(options)
+
+Set the active control on next element on the page. If "useFieldCheckFunction" was used to register a check function, the function will be used to check for the next control to go.
+
+<b>params</b>
+
+{undefined|object} options - optional parameter that setups the options for the search.
+<ul>
+<li>
+<b>baseField</b>: {undefined|string|object} a field to start the search from (ignores the active control). Can be the control object or a selector string
+</li>
+<li>
+<b>stopOnLast</b>: {undefined|boolean} if set to true, when the function called from the last page, nothing will happens
+</li>
+<li>
+<b>reverse</b>: {undefined|boolean} if set to true, the navigation will become 
+</li>
+<li>
+<b>validateField</b>: {undefined|boolean} tells if the field must be valid (true) or not (false). a valid field is enabled and visible on the screen. if ommited, true is considerated
+</li>
+</ul>
+
 
 ##  Configuration
 
