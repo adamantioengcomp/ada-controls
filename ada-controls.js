@@ -90,8 +90,10 @@ angular.module('ada-controls',[])
             },
 
             /**
-             * @param  {undefined|object} options opitional object containing the options to be considered.
-             *                                      
+             * Find the last control element on the page
+             * @param  {undefined|boolean} validateField tells if the field must be valid (true) or not (false). 
+             *                                           a valid field is enabled and visible on the screen.
+             *                                           if ommited, true is considerated
              * @return {object} the last control element on the page
              */
             getLastControl : function(validateField){            
@@ -118,6 +120,10 @@ angular.module('ada-controls',[])
             },
 
             /**
+             * Find the first control element on the page
+             * @param  {undefined|boolean} validateField tells if the field must be valid (true) or not (false). 
+             *                                           a valid field is enabled and visible on the screen.
+             *                                           if ommited, true is considerated
              * @return {object} the first control element on the page
              */
             getFirstControl : function(validateField){
@@ -145,6 +151,9 @@ angular.module('ada-controls',[])
 
             /**
              * Set the active control on the fitst element on the page
+             * @param  {undefined|boolean} validateField tells if the field must be valid (true) or not (false). 
+             *                                           a valid field is enabled and visible on the screen.
+             *                                           if ommited, true is considerated
              */
             firstControl : function(validateField){
                 var ctrl = this.getFirstControl(validateField);
@@ -153,6 +162,9 @@ angular.module('ada-controls',[])
 
             /**
              * Set the active control on the last element on the page
+             * @param  {undefined|boolean} validateField tells if the field must be valid (true) or not (false). 
+             *                                           a valid field is enabled and visible on the screen.
+             *                                           if ommited, true is considerated
              */
             lastControl : function(validateField){
                 var ctrl = this.getLastControl(validateField);
@@ -163,6 +175,11 @@ angular.module('ada-controls',[])
              * find the next element on the page
              * if "useFieldCheckFunction" was used to register a check function, the
              * function will be used to check for the next control to go.
+             * @param {undefined|object} options optional parameter that setups the options for the search.
+             *                                   <b>baseField</b>: {undefined|string|object} a field to start the search from (ignores the active control). Can be the control object or a selector string
+             *                                   <b>stopOnLast</b>: {undefined|boolean} if set to true, when the function called from the last page, nothing will happens
+             *                                   <b>reverse</b>: {undefined|boolean} if set to true, the navigation will become 
+             *                                   <b>validateField</b>: {undefined|boolean} tells if the field must be valid (true) or not (false). a valid field is enabled and visible on the screen. if ommited, true is considerated
              * @return {object} the last control element on the page
              */
             getNextControl : function(options){
@@ -177,7 +194,9 @@ angular.module('ada-controls',[])
 
                 var inputs = $("[control]");
                 if (!baseField || (baseField && !baseField.hasAttribute('control'))){                    
-                    return (options && options.reverse) ? this.getLastControl(options.validateField) : this.getFirstControl(options.validateField);
+                    return (options && options.reverse) ? 
+                            this.getLastControl(options ? options.validateField : undefined) : 
+                            this.getFirstControl(options ? options.validateField : undefined);
                 }else{
                     var selectNext = false;
                     for (var i in inputs){              
@@ -201,9 +220,15 @@ angular.module('ada-controls',[])
             },
 
             /**
-             * Set the active control on next element on the page
+             * Sets the active control on next element on the page
              * if "useFieldCheckFunction" was used to register a check function, the
              * function will be used to check for the next control to go.
+             * @param {undefined|object} options optional parameter that setups the options for the search.
+             *                                   <b>baseField</b>: {undefined|string|object} a field to start the search from (ignores the active control). Can be the control object or a selector string
+             *                                   <b>stopOnLast</b>: {undefined|boolean} if set to true, when the function called from the last page, nothing will happens
+             *                                   <b>reverse</b>: {undefined|boolean} if set to true, the navigation will become 
+             *                                   <b>validateField</b>: {undefined|boolean} tells if the field must be valid (true) or not (false). a valid field is enabled and visible on the screen. if ommited, true is considerated
+             * @return {object} the last control element on the page
              */
             nextControl : function(options){
                 var field = this.getNextControl(options);
