@@ -44,47 +44,56 @@ myApp.controller('myController', function(adaControl){
 
 ### getActiveFocus()
 
-<b>return</b> {Object} the active focus element 
+#### return 
+{Object} the active focus element 
 
 ### setActiveFocus(field)
 
 Set the active focus on a control element on the page
-<b>return</b> 
-{String|Object} field the jquery object or the selector of the field
+
+#### params
+<b>field</b> - {String|Object} the object or the selector of the field
 
 ### isFirstControl(field)
 
 Tells if a field is the first control of the page
-<b>param</b> 
-{String|object} field the jquery object or the selector of the field
-<b>return</b>
+
+#### params
+<b>field</b> - {String|object} the jquery object or the selector of the field
+
+#### return
 {boolean}
 
 ### isLastControl(field)
 
 Tells if a field is the last control of the page
-<b>param</b> 
-{String|object} field the jquery object or the selector of the field
-<b>return</b>
+
+#### params
+<b>field</b> - {String|object} the jquery object or the selector of the field
+
+#### return
 {boolean}
 
 ### getLastControl(validateField)
 
 Find the last control element on the page
-<b>params</b>
-{undefined|boolean} validateField - tells if the field must be valid (true) or not (false). a valid field is enabled and visible on the screen. If ommited, true is considerated
 
-<b>return</b>
+#### params
+<b>validateField</b> - {undefined|boolean} tells if the field must be valid (true) or not (false). a valid field is enabled and visible on the screen. If ommited, true is considerated
+
+#### return
 {object} the last control element on the page
 
 
 ### getFirstControl(validateField)
 
 Find the first control element on the page
-<b>params</b>
-{undefined|boolean} validateField - tells if the field must be valid (true) or not (false). a valid field is enabled and visible on the screen. If ommited, true is considerated
 
-<b>return</b>
+#### params
+
+<b>validateField</b> - {undefined|boolean} tells if the field must be valid (true) or not (false). a valid field is enabled and visible on the screen. If ommited, true is considerated
+
+#### return
 {object} the last control element on the page
 
 
@@ -92,9 +101,9 @@ Find the first control element on the page
 
 find the next element on the page. If "useFieldCheckFunction" was used to register a check function, the function will be used to check for the next control to go.
 
-<b>params</b>
+#### params
 
-{undefined|object} options - optional parameter that setups the options for the search.
+<b>options</b> - {undefined|object} optional parameter that setups the options for the search.
 <ul>
 <li>
 <b>baseField</b>: {undefined|string|object} a field to start the search from (ignores the active control). Can be the control object or a selector string
@@ -110,31 +119,35 @@ find the next element on the page. If "useFieldCheckFunction" was used to regist
 </li>
 </ul>
 
-<b>return</b> 
+#### return
 {object} the last control element on the page
 
 
 ### firstControl(validateField)
 
 Set the active control on the fitst element on the page
-<b>params</b>  
-{undefined|boolean} validateField - tells if the field must be valid (true) or not (false). a valid field is enabled and visible on the screen. If ommited, true is considerated
+
+#### params
+
+<b>validateField</b> - {undefined|boolean}  tells if the field must be valid (true) or not (false). a valid field is enabled and visible on the screen. If ommited, true is considerated
 
 
 ### lastControl(validateField)
 
 Set the active control on the last element on the page
-<b>params</b>  
-{undefined|boolean} validateField - tells if the field must be valid (true) or not (false). a valid field is enabled and visible on the screen. If ommited, true is considerated
+
+#### params
+
+<b>validateField</b> - {undefined|boolean}  tells if the field must be valid (true) or not (false). a valid field is enabled and visible on the screen. If ommited, true is considerated
 
 
 ### nextControl(options)
 
 Set the active control on next element on the page. If "useFieldCheckFunction" was used to register a check function, the function will be used to check for the next control to go.
 
-<b>params</b>
+#### params
 
-{undefined|object} options - optional parameter that setups the options for the search.
+<b>options</b> - {undefined|object}  optional parameter that setups the options for the search.
 <ul>
 <li>
 <b>baseField</b>: {undefined|string|object} a field to start the search from (ignores the active control). Can be the control object or a selector string
