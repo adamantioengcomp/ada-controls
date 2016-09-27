@@ -31,7 +31,7 @@ angular.module('ada-controls',[])
         checkNextField = callback;
     };  
 
-    this.$get = ['activeFocus',function(activeFocus){        
+    this.$get = ['activeFocus','$timeout', function(activeFocus,$timeout){
 
         var isValidField = function(field){
             return (!field.hasAttribute('disabled') && $(field).is(':visible'));
@@ -57,6 +57,7 @@ angular.module('ada-controls',[])
 
                 activeFocus.field = field;
                 (field.querySelector('input') ||  field).focus();
+                $timeout(function(){(field.querySelector('input') ||  field).select();},200);
             },
 
             /**
@@ -157,7 +158,10 @@ angular.module('ada-controls',[])
              */
             firstControl : function(validateField){
                 var ctrl = this.getFirstControl(validateField);
-                if (ctrl) (ctrl.querySelector('input') ||  ctrl).focus();
+                if (ctrl){ 
+                    (ctrl.querySelector('input') ||  ctrl).focus();
+                    $timeout(function(){(ctrl.querySelector('input') ||  ctrl).select();},200);
+                }
             },
 
             /**
@@ -168,7 +172,10 @@ angular.module('ada-controls',[])
              */
             lastControl : function(validateField){
                 var ctrl = this.getLastControl(validateField);
-                if (ctrl) (ctrl.querySelector('input') ||  ctrl).focus();
+                if (ctrl){ 
+                    (ctrl.querySelector('input') ||  ctrl).focus();
+                    $timeout(function(){(ctrl.querySelector('input') ||  ctrl).select();},200);
+                }
             },
 
             /**
@@ -243,6 +250,7 @@ angular.module('ada-controls',[])
                     activeFocus.field = field;
                     field = (field.querySelector('input') ||  field);
                     field.focus();
+                    $timeout(function(){field.select();},200);
                 }
             }
         }
