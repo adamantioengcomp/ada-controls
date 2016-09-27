@@ -8,7 +8,7 @@ angular.module('ada-controls',[])
 .directive('control', ['$window','activeFocus', function ($window,activeFocus) {
     return {
         restrict: 'A',
-        link: function (scope, element, attrs) {        
+        link: function (scope, element, attrs) {                 
             element.focus(function(){
                 activeFocus.field = this;
             });
@@ -56,7 +56,7 @@ angular.module('ada-controls',[])
                 if (!field) return;
 
                 activeFocus.field = field;
-                field.focus();
+                (field.querySelector('input') ||  field).focus();
             },
 
             /**
@@ -157,7 +157,7 @@ angular.module('ada-controls',[])
              */
             firstControl : function(validateField){
                 var ctrl = this.getFirstControl(validateField);
-                if (ctrl) ctrl.focus();
+                if (ctrl) (ctrl.querySelector('input') ||  ctrl).focus();
             },
 
             /**
@@ -168,7 +168,7 @@ angular.module('ada-controls',[])
              */
             lastControl : function(validateField){
                 var ctrl = this.getLastControl(validateField);
-                if (ctrl) ctrl.focus();
+                if (ctrl) (ctrl.querySelector('input') ||  ctrl).focus();
             },
 
             /**
@@ -185,12 +185,12 @@ angular.module('ada-controls',[])
             getNextControl : function(options){
                 var baseField = (options && options.baseField) ? options.baseField : activeFocus.field;
 
-                if (this.isLastControl((options && options.baseField) ? options.baseField : undefined)){
+                /*if (this.isLastControl((options && options.baseField) ? options.baseField : undefined)){
                     if (options && options.stopOnLast)
                         return null;
                     else
                         baseField = undefined;
-                }
+                }*/
 
                 var inputs = $("[control]");
                 if (!baseField || (baseField && !baseField.hasAttribute('control'))){                    
@@ -202,7 +202,7 @@ angular.module('ada-controls',[])
                     for (var i in inputs){              
                         if ((inputs[i] && inputs[i] === baseField) || selectNext){
                             
-                            var nextField = (options && options.reverse) ? inputs[Number(i)-1] : inputs[Number(i)+1];
+                            var nextField = (options && options.reverse) ? inputs[Number(i)-1] : inputs[Number(i)+1];                            
 
                             if (nextField){
                                 var field = checkNextField(baseField) || nextField;
@@ -213,6 +213,12 @@ angular.module('ada-controls',[])
                                 }else{
                                     selectNext = true;
                                 }
+                            }else if (options && options.stopOnLast){
+                                return null;
+                            }else{
+                                return (options && options.reverse) ? 
+                                    this.getLastControl(options ? options.validateField : undefined) : 
+                                    this.getFirstControl(options ? options.validateField : undefined);
                             }
                         }
                     }                    
@@ -232,7 +238,12 @@ angular.module('ada-controls',[])
              */
             nextControl : function(options){
                 var field = this.getNextControl(options);
-                if (field) field.focus();
+                // Se o next field for um elemento que possui um input dentro dele, foca no input                
+                if (field) {
+                    activeFocus.field = field;
+                    field = (field.querySelector('input') ||  field);
+                    field.focus();
+                }
             }
         }
     }];
