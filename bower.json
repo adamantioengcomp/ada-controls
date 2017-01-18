@@ -1,6 +1,6 @@
 {
     "name": "ada-controls",
-    "version": "1.0.1",
+    "version": "v1.0.001",
     "main": "ada-controls.min.js",
     "ignore":[
       
