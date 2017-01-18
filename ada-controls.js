@@ -56,7 +56,10 @@ angular.module('ada-controls',[])
                 if (!field) return;
 
                 activeFocus.field = field;
-                (field.querySelector('input') ||  field).focus();
+                if ((field.tagName !== 'INPUT')&&(field.querySelector))
+                    field = field.querySelector('input');
+
+                field.focus();
                 $timeout(function(){(field.querySelector('input') ||  field).select();},200);
             },
 
